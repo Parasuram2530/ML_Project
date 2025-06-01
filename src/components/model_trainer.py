@@ -36,13 +36,51 @@ class ModelTrainer:
                 "K-Neighbors Regressor": KNeighborsRegressor(),
                 "Decision Tree": DecisionTreeRegressor(),
                 "Random Forest" : RandomForestRegressor(),
-                "Xg bomodelost": XGBRegressor(),
+                "Xg boost": XGBRegressor(),
                 "Cat Boost" : CatBoostRegressor(),
                 "Ada Boost" : AdaBoostRegressor(),
                 "Gradient Boosting" : GradientBoostingRegressor(),
             }
+            params = {
+                "Linear Regression": {},
+                "K-Neighbors Regressor":{
+                    "n_neighbors": [1, 2, 5, 7, 8],
+                    "weights":['uniform', 'distance'],
+                    "algorithm" : ['auto', 'ball_tree', 'kd_tree', 'brute']
+                },
+                "Decision Tree": {
+                    "criterion": ['squared_error', 'friedman_mse', 'absolute_error', 'poisson'],
+                    "splitter": ['best', 'random'],
+                    "max_features": ['sqrt', 'log2']
+                },
+                "Random Forest": {
+                    "n_estimators": [50,100,150,200],
+                    "criterion": ['squared_error', 'absolute_error', 'friedman_mse', 'poisson'],
+                    
+                },
+                "Xg boost":{
+                    'learning_rate':[.1,.01,.05,.001],
+                    'n_estimators': [8,16,32,64,128,256]
+                },
+                "Gradient Boosting":{
+                    'learning_rate':[.1,.01,.05,.001],
+                    'n_estimators': [8,16,32,64,128,256]
+                },
+                "Cat Boost":{
+                    'depth':[6,8,10],
+                    'learning_rate':[0.01,0.05,0.1],
+                    'iterations':[30,50,100]
+                },
+                "Ada Boost":{
+                    'learning_rate':[.1,.01,0.5,.001],
+                    'n_estimators':[8,16,32,64,128,256]
+                }
 
-            model_report:dict = evaluate_model(X_train=X_train, y_train=y_train,X_test=X_test,y_test=y_test, models= models)
+            }
+
+
+
+            model_report:dict = evaluate_model(X_train=X_train, y_train=y_train,X_test=X_test,y_test=y_test, models= models, param = params)
 
             best_model_score = max(sorted(model_report.values()))
             best_model_name = list(model_report.keys())[
